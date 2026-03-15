@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgentOps Classroom</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f0e7;
+        --ink: #253246;
+        --muted: #5f6f7f;
+        --card: rgba(255, 251, 246, 0.94);
+        --line: rgba(62, 76, 94, 0.12);
+        --accent: #b55a2a;
+        --accent-soft: #f6dfcf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(214, 137, 84, 0.18), transparent 24rem),
+          radial-gradient(circle at bottom right, rgba(131, 154, 171, 0.16), transparent 28rem),
+          var(--bg);
+      }
+
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 56px 20px 72px;
+      }
+
+      .hero {
+        padding: 28px;
+        border: 1px solid var(--line);
+        background: linear-gradient(140deg, rgba(255, 248, 242, 0.96), rgba(255, 255, 255, 0.92));
+        border-radius: 28px;
+        box-shadow: 0 24px 64px rgba(52, 63, 79, 0.08);
+      }
+
+      .eyebrow {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 10px;
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        line-height: 1.05;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .hero-grid,
+      .doc-grid {
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero-grid {
+        margin-top: 28px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .doc-grid {
+        margin-top: 24px;
+      }
+
+      .metric,
+      .doc-card {
+        border: 1px solid var(--line);
+        background: var(--card);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .doc-meta {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(17, 32, 59, 0.06);
+        color: var(--ink);
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+
+      .metric strong,
+      .doc-card h2 {
+        display: block;
+        color: var(--ink);
+      }
+
+      .metric strong {
+        font-size: 1.05rem;
+        margin-bottom: 8px;
+      }
+
+      section {
+        margin-top: 28px;
+      }
+
+      .doc-card h2 {
+        margin: 0 0 10px;
+        font-size: 1.35rem;
+      }
+
+      .lead-list {
+        margin-top: 14px;
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 16px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(37, 50, 70, 0.28);
+        color: var(--ink);
+        background: white;
+      }
+
+      a.button.primary {
+        background: var(--ink);
+        color: white;
+      }
+
+      ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      footer {
+        margin-top: 32px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <span class="eyebrow">GitHub Pages PDF Library</span>
+        <h1>AgentOps Classroom</h1>
+        <p>
+          QA 비개발 직군이 Agent AI 기반 QA 자동화 툴을 조금 더 편안하게 이해하고 운영할 수 있도록 만든 상시 열람형 교육 저장소다.
+          지금은 PDF 중심으로 구성되어 있어, 필요할 때마다 브라우저에서 바로 열어보거나 내려받아 참고하면 된다.
+        </p>
+
+        <div class="hero-grid">
+          <article class="metric">
+            <strong>핵심 초점</strong>
+            <p>Agent AI 개념을 이해하고, 좋은 지시문과 결과 검증 습관을 자연스럽게 익히는 것</p>
+          </article>
+          <article class="metric">
+            <strong>대상자</strong>
+            <p>개발자는 아니지만 QA 자동화 툴을 운영하고, 필요한 순간에 자신 있게 다루고 싶은 실무 담당자</p>
+          </article>
+          <article class="metric">
+            <strong>권장 순서</strong>
+            <p>Handbook으로 큰 그림을 먼저 익히고, Runbook으로 일상 운영과 대응 흐름을 차근차근 익히면 된다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="doc-grid">
+        <article class="doc-card">
+          <h2>AgentOps Classroom Handbook</h2>
+          <p>
+            Agent AI의 기본 개념부터, QA 업무를 어떻게 맡기고 결과를 어떻게 살펴보면 좋은지까지 차근차근 정리한 메인 교안이다.
+          </p>
+          <div class="doc-meta">
+            <span class="pill">입문용</span>
+            <span class="pill">핵심 개념 중심</span>
+            <span class="pill">권장 1순위</span>
+          </div>
+          <ul class="lead-list">
+            <li>Agent와 챗봇의 차이를 부담 없이 이해할 수 있다.</li>
+            <li>좋은 요청과 아쉬운 요청의 차이를 예시로 바로 비교할 수 있다.</li>
+            <li>결과를 어떻게 살펴보면 좋을지 기본 기준을 잡을 수 있다.</li>
+          </ul>
+          <div class="links">
+            <a class="button primary" href="./pdf/agentops-classroom-handbook.pdf" target="_blank" rel="noreferrer">PDF 열람</a>
+            <a class="button" href="./pdf/agentops-classroom-handbook.pdf" download>다운로드</a>
+          </div>
+        </article>
+
+        <article class="doc-card">
+          <h2>AgentOps Classroom Runbook</h2>
+          <p>
+            실행 전 점검, 결과 검토, 원인 정리, 운영자가 직접 손볼 수 있는 범위를 담은 실무 참고 문서다.
+          </p>
+          <div class="doc-meta">
+            <span class="pill">운영용</span>
+            <span class="pill">체크리스트 중심</span>
+            <span class="pill">실무 참조용</span>
+          </div>
+          <ul class="lead-list">
+            <li>문제가 생겼을 때 무엇부터 보면 좋을지 순서대로 확인할 수 있다.</li>
+            <li>직접 손볼 수 있는 일과 함께 확인해야 할 일을 구분할 수 있다.</li>
+            <li>실행 결과를 다음 사람도 이해할 수 있게 정리하는 기준을 익힐 수 있다.</li>
+          </ul>
+          <div class="links">
+            <a class="button primary" href="./pdf/agentops-classroom-runbook.pdf" target="_blank" rel="noreferrer">PDF 열람</a>
+            <a class="button" href="./pdf/agentops-classroom-runbook.pdf" download>다운로드</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="doc-card">
+        <h2>이 저장소를 쓰는 방식</h2>
+        <ul>
+          <li>라이브 교육 전에는 Handbook으로 큰 흐름을 먼저 익힌다.</li>
+          <li>라이브 교육 후에는 Runbook으로 실무 운영 절차를 반복해서 익힌다.</li>
+          <li>급하게 참고할 때는 Runbook부터 열고, 맥락이 필요할 때는 Handbook으로 돌아오면 된다.</li>
+          <li>문서를 고칠 때는 원본 콘텐츠를 수정한 뒤 PDF를 다시 생성하면 된다.</li>
+        </ul>
+      </section>
+
+      <footer>
+        Latest update: 2026-03-15 | Repository: AgentOps-Classroom
+      </footer>
+    </main>
+  </body>
+  </html>
