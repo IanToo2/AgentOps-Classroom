@@ -26,7 +26,7 @@ const usableWidth = pg.width - pg.marginX * 2;
 
 // Extra space (in pt) added after each space character for readable Korean word spacing.
 // pdf-lib + NotoSansKR default space glyph is ~2.5pt at 11pt, which is too narrow.
-const wordSpacing = 1.0;
+const wordSpacing = 0.5;
 
 // ── Color palette ──────────────────────────────────────────────
 const colors = {
