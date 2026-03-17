@@ -135,8 +135,8 @@ async function buildDocument(documentData, outputName) {
 
   const regularFontBytes = fs.readFileSync(fontPath);
   const boldFontBytes = fs.readFileSync(boldFontPath);
-  const regularFont = await pdfDoc.embedFont(regularFontBytes, { subset: true });
-  const boldFont = await pdfDoc.embedFont(boldFontBytes, { subset: true });
+  const regularFont = await pdfDoc.embedFont(regularFontBytes, { subset: false });
+  const boldFont = await pdfDoc.embedFont(boldFontBytes, { subset: false });
 
   const ctx = {
     pdfDoc,
