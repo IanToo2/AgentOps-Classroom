@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import fontkit from "@pdf-lib/fontkit";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, PDFNumber, PDFOperator, rgb } from "pdf-lib";
 import { handbook } from "../src/content/handbook.js";
 import { runbook } from "../src/content/runbook.js";
 
@@ -23,6 +23,10 @@ const pg = {
 };
 
 const usableWidth = pg.width - pg.marginX * 2;
+
+// Extra space (in pt) added after each space character for readable Korean word spacing.
+// pdf-lib + NotoSansKR default space glyph is ~2.5pt at 11pt, which is too narrow.
+const wordSpacing = 2.0;
 
 // ── Color palette ──────────────────────────────────────────────
 const colors = {
@@ -48,16 +52,20 @@ function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
   const lines = [];
   let current = "";
+  let currentSpaces = 0;
 
   for (const word of words) {
     const next = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(next, size) <= maxWidth) {
+    const nextSpaces = current ? currentSpaces + 1 : 0;
+    if (font.widthOfTextAtSize(next, size) + nextSpaces * wordSpacing <= maxWidth) {
       current = next;
+      currentSpaces = nextSpaces;
       continue;
     }
     if (current) {
       lines.push(current);
       current = word;
+      currentSpaces = 0;
       // check if single word exceeds width
       if (font.widthOfTextAtSize(word, size) > maxWidth) {
         let chunk = "";
@@ -86,6 +94,7 @@ function wrapText(text, font, size, maxWidth) {
       }
     }
     current = chunk;
+    currentSpaces = 0;
   }
   if (current) lines.push(current);
   return lines;
@@ -99,6 +108,9 @@ function measureTextHeight(text, font, size, maxWidth, lineGap = 4) {
 // ── Page / cursor helpers ──────────────────────────────────────
 function addNewPage(ctx) {
   ctx.page = ctx.pdfDoc.addPage([pg.width, pg.height]);
+  ctx.page.pushOperators(
+    PDFOperator.of("Tw", [PDFNumber.of(wordSpacing)]),
+  );
   ctx.cursorY = pg.height - pg.marginTop;
   ctx.pageCount++;
 }
@@ -713,6 +725,9 @@ async function buildDocument(documentData, outputName) {
     cursorY: pg.height - pg.marginTop,
     pageCount: 1,
   };
+  ctx.page.pushOperators(
+    PDFOperator.of("Tw", [PDFNumber.of(wordSpacing)]),
+  );
 
   drawHeader(ctx, documentData);
 
