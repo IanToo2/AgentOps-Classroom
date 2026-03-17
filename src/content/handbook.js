@@ -1,8 +1,9 @@
 export const handbook = {
   title: "AgentOps Classroom Handbook",
   subtitle: "QA 비개발 직군을 위한 Agent AI 이해와 운영 가이드",
-  version: "v1.1",
+  version: "v1.2",
   updatedAt: "2026-03-17",
+  headerImage: "handbook-hero.png",
   sections: [
     // ── 빠른 읽기 가이드 ──────────────────────────────────────
     {
@@ -68,6 +69,12 @@ export const handbook = {
         {
           type: "paragraph",
           text: "Agent AI를 잘 다루려면 먼저 기본 용어를 정리해 두어야 합니다. 아래는 실무에서 자주 만나는 핵심 개념입니다.",
+        },
+        {
+          type: "image",
+          src: "ai-llm-agent-relationship.png",
+          width: 0.85,
+          caption: "AI > LLM > Agent 포함 관계 — Agent는 LLM 위에 목표·규칙·도구가 더해진 실행 단위",
         },
         {
           type: "definition",
@@ -161,6 +168,12 @@ export const handbook = {
         {
           type: "paragraph",
           text: "Agent에게 일을 맡길 때는 다섯 가지 요소를 포함하면 결과의 품질이 크게 올라갑니다. 아래 표로 각 요소를 정리했습니다.",
+        },
+        {
+          type: "image",
+          src: "request-framework-5.png",
+          width: 0.85,
+          caption: "Agent 요청의 5가지 핵심 요소 — 목표, 입력 데이터, 제약 조건, 출력 형식, 피해야 할 사항",
         },
         {
           type: "table",
@@ -279,6 +292,12 @@ export const handbook = {
           text: "Agent의 결과는 '초안'입니다. 바로 확정하지 말고, 아래 4단계를 거쳐 검증하세요.",
         },
         {
+          type: "image",
+          src: "validation-4steps.png",
+          width: 0.9,
+          caption: "결과 검증 4단계 — 입력 확인 → 참고 정보 확인 → 형식 확인 → 사실 확인",
+        },
+        {
           type: "numbered-list",
           items: [
             "입력 확인 — 내가 전달한 데이터와 조건이 정확했는지 되짚는다.",
@@ -355,6 +374,12 @@ export const handbook = {
         {
           type: "paragraph",
           text: "Agent를 QA 업무에 적용할 때는 큰 작업을 작은 단위로 나누고, 각 단계마다 사람이 확인하는 구조를 만드는 것이 핵심입니다.",
+        },
+        {
+          type: "image",
+          src: "qa-workflow-5steps.png",
+          width: 0.9,
+          caption: "QA 적용 5단계 워크플로우 — 시나리오 정리 → 기대 결과 추출 → 실행 및 비교 → 실패 유형 분류 → 보고서 작성",
         },
         {
           type: "table",

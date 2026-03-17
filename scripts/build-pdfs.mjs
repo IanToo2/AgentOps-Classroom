@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const outputDir = path.join(rootDir, "pdf");
+const imagesDir = path.join(rootDir, "assets", "images");
 const fontPath = path.join(rootDir, "assets", "fonts", "NotoSansKR-Regular.ttf");
 const boldFontPath = path.join(rootDir, "assets", "fonts", "NotoSansKR-Bold.ttf");
 
@@ -485,6 +486,49 @@ function drawDivider(ctx) {
   ctx.cursorY -= 10;
 }
 
+function drawImage(ctx, block) {
+  const image = ctx.images && ctx.images.get(block.src);
+  if (!image) return; // gracefully skip missing images
+
+  const widthRatio = block.width || 0.8;
+  const drawWidth = widthRatio <= 1 ? usableWidth * widthRatio : widthRatio;
+  const imgDims = image.scale(1);
+  const aspectRatio = imgDims.height / imgDims.width;
+  let drawHeight = drawWidth * aspectRatio;
+
+  // Cap max height to 60% of usable page height
+  const maxHeight = (pg.height - pg.marginTop - pg.marginBottom) * 0.6;
+  if (drawHeight > maxHeight) {
+    drawHeight = maxHeight;
+  }
+
+  const captionHeight = block.caption ? 20 : 0;
+  const totalHeight = drawHeight + captionHeight + 10;
+
+  ensureSpace(ctx, totalHeight);
+
+  const x = pg.marginX + (usableWidth - drawWidth) / 2; // center
+  const y = ctx.cursorY - drawHeight;
+
+  ctx.page.drawImage(image, { x, y, width: drawWidth, height: drawHeight });
+  ctx.cursorY = y - 4;
+
+  if (block.caption) {
+    const captionWidth = ctx.regularFont.widthOfTextAtSize(block.caption, 9);
+    const captionX = pg.marginX + (usableWidth - captionWidth) / 2;
+    ctx.page.drawText(block.caption, {
+      x: captionX,
+      y: ctx.cursorY,
+      size: 9,
+      font: ctx.regularFont,
+      color: colors.meta,
+    });
+    ctx.cursorY -= 16;
+  }
+
+  ctx.cursorY -= 6;
+}
+
 function drawGlossary(ctx, glossary) {
   if (!glossary || glossary.length === 0) return;
 
@@ -533,6 +577,9 @@ function renderBlock(ctx, block) {
     case "divider":
       drawDivider(ctx);
       break;
+    case "image":
+      drawImage(ctx, block);
+      break;
     default:
       // Fallback: treat as paragraph if text exists
       if (block.text) drawParagraph(ctx, block);
@@ -574,8 +621,27 @@ function drawHeader(ctx, documentData) {
   drawTextLine(ctx, `Version ${documentData.version} | Updated ${documentData.updatedAt}`, {
     size: 10,
     color: colors.meta,
-    gapAfter: 20,
+    gapAfter: 10,
   });
+
+  // Header banner image
+  if (documentData.headerImage && ctx.images) {
+    const image = ctx.images.get(documentData.headerImage);
+    if (image) {
+      const drawWidth = usableWidth;
+      const imgDims = image.scale(1);
+      const aspectRatio = imgDims.height / imgDims.width;
+      let drawHeight = drawWidth * aspectRatio;
+      const maxHeight = 180;
+      if (drawHeight > maxHeight) drawHeight = maxHeight;
+
+      ensureSpace(ctx, drawHeight + 10);
+      const x = pg.marginX;
+      const y = ctx.cursorY - drawHeight;
+      ctx.page.drawImage(image, { x, y, width: drawWidth, height: drawHeight });
+      ctx.cursorY = y - 14;
+    }
+  }
 }
 
 // ── Main build ─────────────────────────────────────────────────
@@ -593,10 +659,56 @@ async function buildDocument(documentData, outputName) {
   pdfDoc.setAuthor("AgentOps Classroom");
   pdfDoc.setSubject(documentData.subtitle);
 
+  // Preload images
+  const images = new Map();
+  const imageSources = new Set();
+  if (documentData.headerImage) imageSources.add(documentData.headerImage);
+  for (const section of documentData.sections) {
+    if (section.blocks) {
+      for (const block of section.blocks) {
+        if (block.type === "image" && block.src) imageSources.add(block.src);
+      }
+    }
+  }
+  for (const src of imageSources) {
+    try {
+      let imageBytes;
+      if (src.startsWith("http://") || src.startsWith("https://")) {
+        const resp = await fetch(src);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        imageBytes = new Uint8Array(await resp.arrayBuffer());
+      } else {
+        const filePath = path.join(imagesDir, src);
+        if (!fs.existsSync(filePath)) {
+          console.warn(`  [skip] Image not found: ${src}`);
+          continue;
+        }
+        imageBytes = fs.readFileSync(filePath);
+      }
+      const lower = src.toLowerCase();
+      if (lower.endsWith(".png")) {
+        images.set(src, await pdfDoc.embedPng(imageBytes));
+      } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) {
+        images.set(src, await pdfDoc.embedJpg(imageBytes));
+      } else {
+        // Try PNG first, fall back to JPG
+        try {
+          images.set(src, await pdfDoc.embedPng(imageBytes));
+        } catch {
+          images.set(src, await pdfDoc.embedJpg(imageBytes));
+        }
+      }
+      console.log(`  [ok] Embedded image: ${src}`);
+    } catch (err) {
+      console.warn(`  [skip] Failed to load image "${src}": ${err.message}`);
+    }
+  }
+
   const ctx = {
     pdfDoc,
     regularFont,
     boldFont,
+    images,
     page: pdfDoc.addPage([pg.width, pg.height]),
     cursorY: pg.height - pg.marginTop,
     pageCount: 1,

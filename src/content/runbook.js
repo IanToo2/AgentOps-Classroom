@@ -1,8 +1,9 @@
 export const runbook = {
   title: "AgentOps Classroom Runbook",
   subtitle: "QA 운영자를 위한 일상 운영과 1차 대응 안내서",
-  version: "v1.1",
+  version: "v1.2",
   updatedAt: "2026-03-17",
+  headerImage: "runbook-hero.png",
   sections: [
     // ── 빠른 대응 원칙 ────────────────────────────────────────
     {
@@ -62,6 +63,12 @@ export const runbook = {
     {
       title: "2. 실행 절차",
       blocks: [
+        {
+          type: "image",
+          src: "execution-8steps.png",
+          width: 0.9,
+          caption: "8단계 실행 절차 플로우 — 시나리오 선택부터 최종 기록까지",
+        },
         {
           type: "numbered-list",
           items: [
@@ -131,6 +138,12 @@ export const runbook = {
             ["툴 문제", "오류 메시지, 타임아웃, 접근 불가", "오류 로그, 네트워크 상태 확인", "도구 재연결 시도 후 개발자에게 보고"],
             ["정책 문제", "권한 부족 메시지, 보안 차단", "권한 설정 확인", "개발자/관리자에게 에스컬레이션"],
           ],
+        },
+        {
+          type: "image",
+          src: "failure-diagnosis-flow.png",
+          width: 0.85,
+          caption: "실패 원인 진단 의사결정 트리 — 입력 → 프롬프트 → 컨텍스트 → 도구 → 정책 순서로 확인",
         },
         { type: "divider" },
         {
