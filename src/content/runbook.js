@@ -185,6 +185,12 @@ export const runbook = {
           text: "아래는 운영자가 개발자 도움 없이 직접 처리할 수 있는 변경 사항입니다. 각 항목에 구체적인 방법을 정리했습니다.",
         },
         {
+          type: "image",
+          src: "self-service-changes.png",
+          width: 0.9,
+          caption: "운영자가 직접 처리할 수 있는 5가지 변경 사항",
+        },
+        {
           type: "bullets",
           items: [
             "프롬프트 문구 다듬기: 모호한 표현을 구체적으로 바꾸고, 목표/제약/형식을 명시한다.",
@@ -246,6 +252,12 @@ export const runbook = {
         {
           type: "paragraph",
           text: "보고서는 같은 상황을 다른 사람이 따라가 볼 수 있을 정도로 구체적으로 작성합니다. 아래 두 가지 예시를 참고하세요.",
+        },
+        {
+          type: "image",
+          src: "report-template-compare.png",
+          width: 0.9,
+          caption: "QA 보고 템플릿 — 정상 vs 이상 케이스 비교",
         },
         {
           type: "bullets",

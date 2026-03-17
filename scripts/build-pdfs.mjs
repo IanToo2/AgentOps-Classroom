@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import fontkit from "@pdf-lib/fontkit";
-import { PDFDocument, PDFNumber, PDFOperator, rgb } from "pdf-lib";
+import { PDFDocument, rgb } from "pdf-lib";
 import { handbook } from "../src/content/handbook.js";
 import { runbook } from "../src/content/runbook.js";
 
@@ -24,9 +24,6 @@ const pg = {
 
 const usableWidth = pg.width - pg.marginX * 2;
 
-// Extra space (in pt) added after each space character for readable Korean word spacing.
-// pdf-lib + NotoSansKR default space glyph is ~2.5pt at 11pt, which is too narrow.
-const wordSpacing = 0.5;
 
 // ── Color palette ──────────────────────────────────────────────
 const colors = {
@@ -52,20 +49,16 @@ function wrapText(text, font, size, maxWidth) {
   const words = text.split(" ");
   const lines = [];
   let current = "";
-  let currentSpaces = 0;
 
   for (const word of words) {
     const next = current ? `${current} ${word}` : word;
-    const nextSpaces = current ? currentSpaces + 1 : 0;
-    if (font.widthOfTextAtSize(next, size) + nextSpaces * wordSpacing <= maxWidth) {
+    if (font.widthOfTextAtSize(next, size) <= maxWidth) {
       current = next;
-      currentSpaces = nextSpaces;
       continue;
     }
     if (current) {
       lines.push(current);
       current = word;
-      currentSpaces = 0;
       // check if single word exceeds width
       if (font.widthOfTextAtSize(word, size) > maxWidth) {
         let chunk = "";
@@ -94,7 +87,6 @@ function wrapText(text, font, size, maxWidth) {
       }
     }
     current = chunk;
-    currentSpaces = 0;
   }
   if (current) lines.push(current);
   return lines;
@@ -108,9 +100,6 @@ function measureTextHeight(text, font, size, maxWidth, lineGap = 4) {
 // ── Page / cursor helpers ──────────────────────────────────────
 function addNewPage(ctx) {
   ctx.page = ctx.pdfDoc.addPage([pg.width, pg.height]);
-  ctx.page.pushOperators(
-    PDFOperator.of("Tw", [PDFNumber.of(wordSpacing)]),
-  );
   ctx.cursorY = pg.height - pg.marginTop;
   ctx.pageCount++;
 }
@@ -207,7 +196,7 @@ function drawCalloutBox(ctx, block) {
   const boxWidth = usableWidth;
   const textWidth = boxWidth - padX * 2 - accentWidth;
   const textH = measureTextHeight(block.text, ctx.regularFont, 10.5, textWidth, 4);
-  const boxH = textH + padY * 2;
+  const boxH = textH + padY * 2 + 4;
 
   ensureSpace(ctx, boxH + 8);
   const boxTop = ctx.cursorY + 12;
@@ -342,7 +331,7 @@ function calculateColumnWidths(ctx, headers, rows, tableWidth, fontSize, cellPad
 
 function drawComparison(ctx, block) {
   const { bad, good } = block;
-  const padX = 10;
+  const padX = 12;
   const padY = 8;
   const gap = 10;
   const halfWidth = (usableWidth - gap) / 2;
@@ -355,7 +344,7 @@ function drawComparison(ctx, block) {
   const goodLabelH = labelSize + 6;
   const badTextH = measureTextHeight(bad.text, ctx.regularFont, fontSize, textWidth, 4);
   const goodTextH = measureTextHeight(good.text, ctx.regularFont, fontSize, textWidth, 4);
-  const boxH = Math.max(badLabelH + badTextH, goodLabelH + goodTextH) + padY * 2;
+  const boxH = Math.max(badLabelH + badTextH, goodLabelH + goodTextH) + padY * 2 + 4;
 
   ensureSpace(ctx, boxH + 8);
   const boxTop = ctx.cursorY + 8;
@@ -434,7 +423,7 @@ function drawScenario(ctx, block) {
     contentH += measureTextHeight(text, ctx.regularFont, fontSize, textWidth - 40, lineGap);
     contentH += 4;
   }
-  const boxH = contentH + padY * 2;
+  const boxH = contentH + padY * 2 + 4;
 
   ensureSpace(ctx, boxH + 8);
   const boxTop = ctx.cursorY + 8;
@@ -725,9 +714,6 @@ async function buildDocument(documentData, outputName) {
     cursorY: pg.height - pg.marginTop,
     pageCount: 1,
   };
-  ctx.page.pushOperators(
-    PDFOperator.of("Tw", [PDFNumber.of(wordSpacing)]),
-  );
 
   drawHeader(ctx, documentData);
 
