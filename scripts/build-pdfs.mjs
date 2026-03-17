@@ -46,13 +46,16 @@ const colors = {
 
 // ── Text utilities ─────────────────────────────────────────────
 function wrapText(text, font, size, maxWidth) {
+  // Subtract a small safety margin to prevent edge-case horizontal overflow.
+  // font.widthOfTextAtSize can slightly underestimate the rendered width for CJK text.
+  const safeWidth = maxWidth - 2;
   const words = text.split(" ");
   const lines = [];
   let current = "";
 
   for (const word of words) {
     const next = current ? `${current} ${word}` : word;
-    if (font.widthOfTextAtSize(next, size) <= maxWidth) {
+    if (font.widthOfTextAtSize(next, size) <= safeWidth) {
       current = next;
       continue;
     }
