@@ -199,6 +199,12 @@ export const handbook = {
       title: "4. 좋은 요청과 나쁜 요청",
       blocks: [
         {
+          type: "image",
+          src: "good-vs-bad-prompt.png",
+          width: 0.85,
+          caption: "아쉬운 요청 vs 좋은 요청 — 구체적인 목표·입력·제약·형식이 결과를 바꾼다",
+        },
+        {
           type: "paragraph",
           text: "같은 Agent라도 요청의 품질에 따라 결과가 크게 달라집니다. 아래 네 가지 비교를 통해 좋은 요청의 패턴을 익혀봅시다.",
         },
@@ -315,6 +321,12 @@ export const handbook = {
     {
       title: "6. QA 운영자의 판단 기준",
       blocks: [
+        {
+          type: "image",
+          src: "operator-decision-boundary.png",
+          width: 0.85,
+          caption: "운영자 직접 처리 vs 개발자 협업 — 판단 경계를 미리 알아두면 시행착오가 줄어든다",
+        },
         {
           type: "paragraph",
           text: "운영자가 직접 해결할 수 있는 범위와, 개발자의 도움이 필요한 범위를 미리 알아두면 불필요한 시행착오를 줄일 수 있습니다.",

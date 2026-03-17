@@ -214,6 +214,12 @@ export const runbook = {
       title: "6. 함께 확인이 필요한 경우",
       blocks: [
         {
+          type: "image",
+          src: "escalation-flow.png",
+          width: 0.85,
+          caption: "에스컬레이션 의사결정 트리 — 문제 유형별 담당자 연결 흐름",
+        },
+        {
           type: "table",
           headers: ["상황", "누구에게", "전달 정보"],
           rows: [
